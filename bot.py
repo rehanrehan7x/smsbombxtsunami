@@ -22,10 +22,10 @@ BOT_TOKEN       = os.environ.get("BOT_TOKEN", "")
 WEBHOOK_URL     = os.environ.get("RENDER_EXTERNAL_URL", "").rstrip("/")
 PORT            = int(os.environ.get("PORT", 8000))
 
-# BALANCED CONFIG (Smooth + Continuous)
-CONCURRENCY     = 15   # 15 requests ek saath (Block nahi hoga)
-DELAY           = 0.5  # 0.5 second ka gap (Lagataar chalega)
-REQUEST_TIMEOUT = 8
+# FAST + CONTINUOUS CONFIG
+CONCURRENCY     = 40   # 40 requests ek saath (Speed wapas)
+DELAY           = 0.1  # 0.1 second ka gap (Continuous flow)
+REQUEST_TIMEOUT = 5    # Jaldi fail ho taaki loop na ruke
 # ============================================
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
